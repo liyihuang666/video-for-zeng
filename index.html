@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精彩视频 · 美好时刻</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #fff8f0;
+      font-family: -apple-system, "PingFang SC", "Noto Serif SC", "Helvetica Neue", system-ui, serif;
+      color: #2b241c;
+      -webkit-font-smoothing: antialiased;
+    }
+    :root {
+      --brick-red: #bc5a3c;
+      --brick-deep: #9c3e24;
+      --golden: #d9a13b;
+      --paper: #ffffff;
+      --text-dark: #2c241a;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(188,90,60,0.03) 0px, rgba(188,90,60,0.03) 2px, transparent 2px, transparent 12px),
+        repeating-linear-gradient(135deg, rgba(188,90,60,0.02) 0px, rgba(188,90,60,0.02) 1px, transparent 1px, transparent 10px);
+      pointer-events: none; z-index: 0;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 56px 32px 88px;
+      position: relative; z-index: 2;
+    }
+    .swallow-tail {
+      display: flex; justify-content: center; gap: 6px; margin-bottom: 24px;
+    }
+    .swallow-tail span {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, var(--brick-red), var(--golden));
+      border-radius: 3px;
+    }
+    .swallow-tail span:first-child, .swallow-tail span:last-child { width: 72px; }
+    .hero { text-align: center; margin-bottom: 48px; }
+    h1 {
+      font-size: 44px; font-weight: 600; letter-spacing: 1px;
+      color: var(--text-dark); margin-bottom: 16px;
+    }
+    .subtitle {
+      font-size: 20px; color: var(--brick-deep);
+      display: inline-block;
+      padding: 8px 28px;
+      background: rgba(217,161,59,0.1);
+      border-radius: 60px;
+      border: 1px solid rgba(188,90,60,0.2);
+      letter-spacing: 2px;
+    }
+    .video-card {
+      background: var(--paper);
+      border-radius: 28px; overflow: hidden;
+      box-shadow: 0 20px 32px -12px rgba(0,0,0,0.08);
+      border: 1px solid #f0dfce;
+    }
+    .video-container { position: relative; width: 100%; background: #e2d2be; cursor: pointer; }
+    .video-container video {
+      width: 100%; display: block;
+      aspect-ratio: 16/9; object-fit: cover;
+    }
+    .play-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.12); backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; transition: background 0.2s; border-radius: 28px;
+    }
+    .play-overlay:hover { background: rgba(0,0,0,0.18); }
+    .play-btn {
+      width: 80px; height: 80px;
+      background: rgba(255,255,245,0.96);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+      transition: transform 0.2s; cursor: pointer;
+    }
+    .play-btn::after {
+      content: "▶"; font-size: 36px; color: var(--brick-red); margin-left: 6px;
+    }
+    .play-btn:hover { transform: scale(1.06); }
+    .loading-indicator {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 48px; height: 48px;
+      border: 4px solid rgba(188,90,60,0.2);
+      border-top: 4px solid var(--brick-red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      z-index: 3; display: none;
+    }
+    @keyframes spin {
+      0% { transform: translate(-50%,-50%) rotate(0deg); }
+      100% { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+    .footer {
+      text-align: center; font-size: 14px; color: #b29074;
+      border-top: 1px solid #eedbcb; padding-top: 28px; margin-top: 40px;
+    }
+    .fade-in { animation: fadeUp 0.65s ease-out; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 640px) {
+      .container { padding: 32px 20px 56px; }
+      h1 { font-size: 30px; }
+      .subtitle { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container fade-in">
+  <div class="swallow-tail"><span></span><span></span><span></span></div>
+  <div class="hero">
+    <h1>精彩视频 · 美好时刻</h1>
+    <div class="subtitle">扫码播放</div>
+  </div>
+  <div class="video-card">
+    <div class="video-container" id="videoContainer">
+      <video id="mainVideo" playsinline preload="none"
+        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1280 720'%3E%3Crect width='1280' height='720' fill='%23E7D8C5'/%3E%3Ccircle cx='640' cy='360' r='80' fill='%23BC5A3C' opacity='0.2'/%3E%3Cpolygon points='620,325 670,360 620,395' fill='%23BC5A3C' opacity='0.5'/%3E%3C/svg%3E"
+        style="width:100%;display:block;">
+      </video>
+      <div class="play-overlay" id="playOverlay">
+        <div class="play-btn" id="playButton"></div>
+      </div>
+      <div class="loading-indicator" id="loadingSpinner"></div>
+    </div>
+  </div>
+  <div class="footer">🎬 美好时刻 · 扫码观看</div>
+</div>
+<script>
+(function() {
+  var video = document.getElementById('mainVideo');
+  var playOverlay = document.getElementById('playOverlay');
+  var playBtn = document.getElementById('playButton');
+  var spinner = document.getElementById('loadingSpinner');
+  var VIDEO_SRC = 'video.mp4';
+  var isLoading = false, loadAttempted = false, videoReady = false;
+
+  function hideAll() {
+    if (playOverlay) playOverlay.style.display = 'none';
+    if (spinner) spinner.style.display = 'none';
+  }
+  function loadAndPlay() {
+    if (isLoading) return;
+    if (videoReady && video.readyState >= 2) {
+      video.play().then(hideAll).catch(function() { hideAll(); });
+      return;
+    }
+    if (!loadAttempted) {
+      isLoading = true; loadAttempted = true;
+      if (spinner) spinner.style.display = 'block';
+      video.src = VIDEO_SRC; video.preload = 'auto'; video.load();
+      var onReady = function() {
+        video.removeEventListener('canplaythrough', onReady);
+        video.removeEventListener('loadeddata', onReady);
+        if (isLoading) {
+          videoReady = true;
+          video.play().then(function() { hideAll(); isLoading = false; }).catch(function() { isLoading = false; hideAll(); });
+        }
+      };
+      var onError = function() {
+        video.removeEventListener('error', onError);
+        isLoading = false; loadAttempted = false;
+        if (spinner) spinner.style.display = 'none';
+      };
+      video.addEventListener('canplaythrough', onReady, {once:true});
+      video.addEventListener('loadeddata', onReady, {once:true});
+      video.addEventListener('error', onError, {once:true});
+      setTimeout(function() { if (isLoading) onError(); }, 10000);
+    } else {
+      video.play().then(hideAll).catch(function() {});
+    }
+  }
+  if (playBtn) playBtn.addEventListener('click', function(e) { e.stopPropagation(); loadAndPlay(); });
+  if (playOverlay) playOverlay.addEventListener('click', function(e) { if (e.target === playBtn || (playBtn && playBtn.contains(e.target))) return; loadAndPlay(); });
+  video.addEventListener('play', function() { hideAll(); isLoading = false; videoReady = true; });
+  var sources = video.querySelectorAll('source');
+  sources.forEach(function(s) { s.remove(); });
+  if (!video.getAttribute('src')) { video.removeAttribute('src'); video.load(); }
+  video.preload = 'none';
+})();
+</script>
+</body>
+</html>
